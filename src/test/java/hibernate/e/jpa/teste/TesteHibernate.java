@@ -106,6 +106,35 @@ public class TesteHibernate {
 				
 			}
 		}
+	@Test
+	public void testeQueryListParameter() 
+		{
+		DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+		List<UsuarioPessoa> lista   = daoGeneric
+										.getEntityManager()
+										/*.createQuery("from UsuarioPessoa where nome = :nome or sobrenome =:sobrenome")*/
+										.createQuery("from UsuarioPessoa where nome = :nome and sobrenome =:sobrenome")
+										.setParameter("nome","Fulano ")
+										.setParameter("sobrenome","coffy").getResultList();
+			
+			for (UsuarioPessoa usuarioPessoa : lista) {
+				System.out.println(usuarioPessoa);
+				
+			}
+		}
+	@Test
+	public void testeQuerySomaIdades() 
+		{
+	
+			DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+			Long somaIdade = (Long) daoGeneric	
+							 .getEntityManager()
+							 .createQuery("select sum(u.idade)from UsuarioPessoa u")
+							 .getSingleResult();
+			
+			System.out.println("A soma das idades foi -->> " +somaIdade);
+		
+		}
 	
 	
 	
