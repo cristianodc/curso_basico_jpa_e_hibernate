@@ -6,6 +6,7 @@ import org.junit.Test;
 
 
 import dao.DaoGeneric;
+import model.TelefoneUser;
 import model.UsuarioPessoa;
 
 public class TesteHibernate {
@@ -136,7 +137,63 @@ public class TesteHibernate {
 		
 		}
 	
+	@Test
+	public void testeNamedQuery() 
+		{
+			DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+			List<UsuarioPessoa> lista   = daoGeneric
+											.getEntityManager()
+											.createNamedQuery("UsuarioPessoa.getAll")
+											.getResultList();
+			for (UsuarioPessoa usuarioPessoa : lista) {
+				System.out.println(usuarioPessoa);
+				
+			}
+		}
+	@Test
+	public void testeNamedQueryComParametros() 
+		{
+			DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+			List<UsuarioPessoa> lista   = daoGeneric
+											.getEntityManager()
+											.createNamedQuery("UsuarioPessoa.buscaPorNome")
+											.setParameter("nome", "Beltrano ")
+											.getResultList();
+			for (UsuarioPessoa usuarioPessoa : lista) {
+				System.out.println(usuarioPessoa);
+				
+			}
+		}
+	@Test
+	public void testeGravafone() 
+		{
+			DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+			DaoGeneric<TelefoneUser> daoGenericFone = new DaoGeneric<TelefoneUser>();
+			UsuarioPessoa pessoa = daoGeneric.pesquisar(4L, UsuarioPessoa.class);
+			TelefoneUser userFone = new TelefoneUser();
+			
+			userFone.setTipo("Celular");
+			userFone.setNumero("068967896789");
+			userFone.setUsuarioPessoa(pessoa);
+			
+			daoGenericFone.salvar(userFone);
+			
+		}
 	
+	@Test
+	public void testeConsultaFone() 
+		{
+			DaoGeneric daoGeneric = new DaoGeneric();
+			UsuarioPessoa pessoa = (UsuarioPessoa) daoGeneric.pesquisar(4L, UsuarioPessoa.class);
+			
+			for (TelefoneUser fone : pessoa.getTelefoneUser()) {
+				
+				System.out.println(fone.getUsuarioPessoa().getNome());
+				System.out.println(fone.getTipo());
+				System.out.println(fone.getNumero());
+				
+			}
+		}
 	
 	
 }
